@@ -26,4 +26,18 @@
           </ion-row>
         </ion-col>
       </ion-row>
+
+      <iq-calendar-week-hours-view
+      [viewDate]="viewDate"
+      [events]="events"
+      [hourSegments]="2"
+      [dayStartHour]="8"
+      [dayEndHour]="20"
+      (eventClicked)="handleEvent($event.event)"
+      (hourSegmentClicked)="hourSegmentClicked($event)"
+      (eventTimesChanged)="eventTimesChanged($event)"
+      [weekStartsOn]="1"
+      [refresh]="refresh"
+      [locale]="local">
+    </iq-calendar-week-hours-view>
 </ion-content>

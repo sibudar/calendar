@@ -26,7 +26,7 @@ export class HomePage {
 
   viewDate: Date= new Date() ;
   view = "week" ;
-  locale= "de" ;
+  locale= "zu" ;
   isDragging = false ;
 
   refresh: Subject<any> = new Subject() ;
@@ -67,5 +67,51 @@ export class HomePage {
   constructor(public navCtrl: NavController , private alrtCtrl: AlertController) {
 
   }
+
+  handleEvent(event: CalendarEvent): void {
+    let alert = this.alrtCtrl.create({
+      title: event.title,
+      message: event.start + ' to ' + event.end,
+      buttons: ['OK']
+    });
+    alert.present();
+  }
+
+  hourSegmentClicked(event): void {
+    let newEvent: CalendarEvent = {
+      start: event.date,
+      end: addHours(event.date, 1),
+      title: 'TEST EVENT',
+      cssClass: 'custom-event',
+      color: {
+        primary: '#488aff',
+        secondary: '#bbd0f5'
+      },
+      resizable: {
+        beforeStart: true,
+        afterEnd: true
+      },
+      draggable: true
+    }
+
+    this.events.push(newEvent);
+    this.refresh.next();
+  }
+
+   eventTimesChanged({event, newStart, newEnd} : CalendarEventTimesChangedEvent): void {
+    if (this.isDragging) {
+      return;
+    }
+    this.isDragging = true;
+ 
+    event.start = newStart;
+    event.end = newEnd;
+    this.refresh.next();
+ 
+    setTimeout(() => {
+      this.isDragging = false;
+    },1000);
+  }
+
 
 }
