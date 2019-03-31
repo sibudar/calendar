@@ -1,0 +1,90 @@
+<!--
+  Generated template for the LandingPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header primary>
+  <ion-navbar color="primary">
+    <ion-title>landing</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+
+    <div padding>
+        <ion-segment [(ngModel)]="menu">
+          <ion-segment-button value="upcoming">
+              Upcoming
+          </ion-segment-button>
+          <ion-segment-button value="Pending">
+            Pending
+          </ion-segment-button>
+        </ion-segment>
+      </div>
+
+
+      <div [ngSwitch]="menu">
+          <ion-list *ngSwitchCase="'upcoming'">
+            <div>
+            <ion-item no-lines *ngFor="let event of upcoming"> 
+              <ion-thumbnail item-start  style="height:80px !important" >
+                <img src="img/thumbnail-puppy-1.jpg" >
+              </ion-thumbnail>
+              <ion-card style="height:80px !important" (click)="showConfirm(event)">
+                
+                  <ion-card-content>   
+                    
+                    <h2>{{event.title}}</h2>
+                    <p>{{event.vanue}}</p>
+                  </ion-card-content>
+                
+                </ion-card>
+            </ion-item>
+
+
+
+</div>
+
+
+
+            
+     
+          </ion-list>
+        
+          <ion-list *ngSwitchCase="'Pending'">
+              <div>
+                  <ion-item no-lines *ngFor="let event of pending"> 
+                    <ion-thumbnail item-start  style="height:80px !important" >
+                      <img src="img/thumbnail-puppy-1.jpg" >
+                    </ion-thumbnail>
+                    <ion-card style="height:80px !important" (click)="showConfirm(event)">
+                      
+                        <ion-card-content>   
+                          
+                          <h2>{{event.title}}</h2>
+                          <p>{{event.vanue}}</p>
+                        </ion-card-content>
+                      
+                      </ion-card>
+                  </ion-item>
+      
+      
+      
+      </div>
+
+          </ion-list>
+        </div>
+
+
+
+ <!-- <ion-list>
+    <ion-item *ngFor="let grocery of events">{{grocery}}</ion-item>
+</ion-list> -->
+
+<ion-fab right bottom>
+  <button ion-fab color="dark" (click)="openCalendar()"><ion-icon name="add"></ion-icon></button>
+</ion-fab>
+
+</ion-content>

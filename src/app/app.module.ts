@@ -1,3 +1,5 @@
+import { BookAppointmentPage } from './../pages/book-appointment/book-appointment';
+import { LandingPage } from './../pages/landing/landing';
 import  localeDe  from '@angular/common/locales/zu';
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
@@ -13,12 +15,17 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CalendarModule , CalendarDateFormatter , CalendarEventTitleFormatter } from 'angular-calendar';
 import {  CalendarWeekHoursViewModule } from 'angular-calendar-week-hours-view' ; 
 import {registerLocaleData} from '@angular/common'; 
+import { DayViewPage } from '../pages/day-view/day-view';
+import { EvProvider } from '../providers/ev/ev';
 registerLocaleData(localeDe);
 
 @NgModule({
   declarations: [
     MyApp,
-    HomePage
+    HomePage,
+    DayViewPage,
+    LandingPage,
+    BookAppointmentPage
   ],
   imports: [
     BrowserModule,
@@ -30,7 +37,10 @@ registerLocaleData(localeDe);
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
+    HomePage,
+    DayViewPage,
+    LandingPage,
+    BookAppointmentPage
   ],
   providers: [
     StatusBar,
@@ -43,7 +53,9 @@ registerLocaleData(localeDe);
     {
       provide: CalendarEventTitleFormatter,
       useClass: CustomEventTitleFormatterProvider
-    }
+    },
+    EvProvider,
+
   ]
 })
 export class AppModule {}

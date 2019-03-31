@@ -13,7 +13,7 @@ export class CustomDateFormatterProvider extends CalendarDateFormatter {
   public weekViewTitle({ date, locale }: DateFormatterParams): string {
     const year: string = new DatePipe(locale).transform(date, 'y', locale);
     const weekNumber: number = getISOWeek(date);
-    return `Woche ${weekNumber} in ${year}`;
+    return `Week ${weekNumber} in ${year}`;
   }
  
   public weekViewColumnHeader({ date, locale }: DateFormatterParams): string {

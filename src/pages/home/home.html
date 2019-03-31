@@ -6,8 +6,8 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-    <ion-row>
+<ion-content no-padding>
+  <ion-row>
         <ion-col col-12 col-md-3>
           <ion-row>
             <ion-col col-3 no-padding>
@@ -17,6 +17,7 @@
             </ion-col>
             <ion-col col-6 no-padding>
               <button ion-button full clear mwlCalendarToday [(viewDate)]="viewDate">Today</button>
+    
             </ion-col>
             <ion-col col-3 no-padding>
               <button ion-button full clear icon-only mwlCalendarNextView [view]="view" [(viewDate)]="viewDate">
@@ -27,12 +28,13 @@
         </ion-col>
       </ion-row>
 
+  <!-- <div *ngIf="dayClick">
       <iq-calendar-week-hours-view
       [viewDate]="viewDate"
       [events]="events"
       [hourSegments]="2"
       [dayStartHour]="8"
-      [dayEndHour]="20"
+      [dayEndHour]="17"
       (eventClicked)="handleEvent($event.event)"
       (hourSegmentClicked)="hourSegmentClicked($event)"
       (eventTimesChanged)="eventTimesChanged($event)"
@@ -40,4 +42,34 @@
       [refresh]="refresh"
       [locale]="local">
     </iq-calendar-week-hours-view>
+  </div> -->
+
+  <div *ngIf="!dayClick">
+  <mwl-calendar-month-view
+
+    [viewDate]="viewDate"
+    [events]="events"
+    [refresh]="refresh"
+    [activeDayIsOpen]="activeDayIsOpen"
+    (dayClicked)="dayClicked($event.day)"
+    (eventClicked)="handleEvent('Clicked', $event.event)"
+    (eventTimesChanged)="eventTimesChanged($event)"
+  >
+  </mwl-calendar-month-view>
+</div>
+
+
+
+<div *ngIf="dayClick">
+  <mwl-calendar-day-view
+  [viewDate]="viewDate"
+  [events]="events"
+  [refresh]="refresh"
+  (eventClicked)="handleEvent('Clicked', $event.event)"
+  (timeClicked)= "time()"
+  (eventTimesChanged)="eventTimesChanged($event)"
+>
+</mwl-calendar-day-view>
+
+</div>
 </ion-content>
