@@ -1,3 +1,5 @@
+import { EvProvider } from './../../providers/ev/ev';
+import { BookAppointmentPage } from './../book-appointment/book-appointment';
 import { AlertController } from 'ionic-angular/components/alert/alert-controller';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
@@ -28,11 +30,10 @@ export class DayViewPage {
   isDragging = false;
   view = "month" ;
   locale= "zu" ;
-  constructor(public navCtrl: NavController, public navParams: NavParams , private alrtCtrl: AlertController) {
+  constructor(public ev: EvProvider ,public modalCtrl: ModalController ,public navCtrl: NavController, public navParams: NavParams , private alrtCtrl: AlertController) {
     let selected: Date = new Date(this.navParams.get("day")) ; 
-    let e :  CalendarEvent[] = this.navParams.get("event");
 
-    this.events = e;
+
     this.date = selected ; 
 
     console.log(this.date) ;
@@ -44,12 +45,12 @@ export class DayViewPage {
   }
 
   handleEvent(clicked,event: CalendarEvent): void {
-    // let alert = this.alrtCtrl.create({
-    //   title: event.title,
-    //   message: event.start + ' to ' + event.end,
-    //   buttons: ['OK']
-    // });
-    // alert.present();
+    let alert = this.alrtCtrl.create({
+      title: event.title,
+      message: event.vanue,
+      buttons: ['OK']
+    });
+    alert.present();
 
     console.log(event)
   }
@@ -70,7 +71,7 @@ export class DayViewPage {
         afterEnd: true
       },
       draggable: true,
-      status:false
+      status:0
     }
 
     this.events.push(newEvent);
@@ -95,6 +96,16 @@ export class DayViewPage {
 
   time() {
     console.log('timeClcked')
+  }
+
+  ionViewWillEnter() {
+    this.events = (this.ev.getEv()) ;
+    console.log(this.events) ; 
+    this.refresh.next() ;
+  }
+
+  book() {
+    this.navCtrl.push(BookAppointmentPage , {date: this.date}) ;
   }
 
 }

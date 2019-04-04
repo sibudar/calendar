@@ -1,11 +1,15 @@
+import { ServiceProvider } from './../../providers/service/service';
+import { Subject } from 'rxjs/Subject';
+
 import { EvProvider } from './../../providers/ev/ev';
 import { HomePage } from './../home/home';
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events, ToastController } from 'ionic-angular';
+import { Component, Type } from '@angular/core';
+import { IonicPage, NavController, NavParams, Events, ToastController, Content } from 'ionic-angular';
 import { CalendarEvent } from 'calendar-utils';
 import { addHours, startOfDay } from 'date-fns';
 import { AlertController } from 'ionic-angular/components/alert/alert-controller';
-
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { DatePipe } from '@angular/common'
 
 /**
  * Generated class for the LandingPage page.
@@ -21,9 +25,14 @@ import { AlertController } from 'ionic-angular/components/alert/alert-controller
 })
 export class LandingPage {
 
+  httpOptions = { headers: new HttpHeaders({ 'ContentType': 'application/json' }) };
+  headers = new HttpHeaders({ 'Content-Type': 'application/x-www-from-ur-urlencoded' });
+  httpOption = { headers: this.headers };
+
+
   menu: string = 'upcoming';
-  upcoming: CalendarEvent[] = [] ;
-  pending: CalendarEvent[] = [] ;
+  upcoming: CalendarEvent[] = [];
+  pending: CalendarEvent[] = [];
 
   events: CalendarEvent[] = [
     {
@@ -44,10 +53,10 @@ export class LandingPage {
         afterEnd: true
       },
       draggable: false,
-      status: false
+      status: 0
     },
     {
-      id: 2 ,
+      id: 2,
       start: addHours(startOfDay(new Date()), 10),
       end: addHours(startOfDay(new Date()), 12),
       title: 'Second Event',
@@ -61,25 +70,65 @@ export class LandingPage {
         afterEnd: true
       },
       draggable: true,
-      status: true
+      status: 1
     }
   ];
   groceries: string[];
+  user: any;
 
-  constructor(public e: Events ,public navCtrl: NavController, public navParams: NavParams,private alrtCtrl: AlertController , private toastCtrl: ToastController) {
-      this.pending = this.events.filter( event => event.status === false ) ;
-      this.upcoming = this.events.filter( event => event.status === true ) ;
+  
+  constructor(public service: ServiceProvider ,public datepipe: DatePipe ,public http: HttpClient, public e: Events, public ev: EvProvider, public navCtrl: NavController, public navParams: NavParams, private alrtCtrl: AlertController, private toastCtrl: ToastController) {
+    this.pending = this.events.filter(event => event.status === 0);
+    this.upcoming = this.events.filter(event => event.status === 1);
 
+     this.user = (this.ev.getUser()) ;
+   
+    
+
+    this.service.getApp(this.user.id).subscribe((res: any) => {
+      
+      let ev: CalendarEvent[] = [];
+      ev = res ;
 
       
+      ev.map( event => {
+        event.color = {
+          primary: '#488aff',
+          secondary: '#bbd0f5'
+        } ; 
 
+        event.resizable = {
+          beforeStart: true,
+          afterEnd: true
+        }
+
+
+        event.draggable = false ;
+
+        event.start =new Date( event.start ) ;
+        event.end =new Date( event.end ) ;
+
+        
+       
+        
+      })
+     
+      this.events = ev ;
+
+      
+      console.log(this.events)
+      this.pending = this.events.filter(event => event.status === 0);
+      this.upcoming = this.events.filter(event => event.status === 1);
+      this.ev.setEv(this.upcoming);
+      console.log("pending" , this.pending)
+    })
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LandingPage');
   }
-  
-  ionViewWillEnter(){
+
+  ionViewWillEnter() {
     console.log('am here')
   }
 
@@ -108,7 +157,7 @@ export class LandingPage {
 
   doubleComfirm(id) {
     const confirm = this.alrtCtrl.create({
-   
+
       message: 'Are you sure you want to cancel this appointment',
       buttons: [
         {
@@ -121,16 +170,16 @@ export class LandingPage {
           text: 'YES',
           handler: () => {
 
-            if(this.menu === 'upcoming'){
-              this.upcoming = this.upcoming.filter( event => event.id !== id) ;
-              this.events = this.events.filter( event => event.id !== id) ;
-            this.presentToast()
-            }else{
-              this.pending = this.pending.filter( event => event.id !== id) ;
-              this.events = this.events.filter( event => event.id !== id) ;
+            if (this.menu === 'upcoming') {
+              this.upcoming = this.upcoming.filter(event => event.id !== id);
+              this.events = this.events.filter(event => event.id !== id);
+              this.presentToast()
+            } else {
+              this.pending = this.pending.filter(event => event.id !== id);
+              this.events = this.events.filter(event => event.id !== id);
               this.presentToast()
             }
-            
+
           }
         }
       ]
@@ -149,13 +198,50 @@ export class LandingPage {
 
 
   openCalendar() {
-    
-    console.log('dfghjkl')
-    this.navCtrl.push(HomePage , {events: this.events}).then(()=>{
-      this.e.publish('event' , 'this.events') ;
+
+   
+    this.navCtrl.push(HomePage, { events: this.events }).then(() => {
+      // this.e.publish('event' , 'this.events') ;
     })
   }
 
+
+  dateToCal(date) {
+
+    return this.datepipe.transform(date , 'EEEE MMMM d y h:mm:ss a zzzz')
+
+  }
+
+
+  showPending(event) {
+    
+    const confirm = this.alrtCtrl.create({
+      title: event.title,
+      message: event.description,
+      buttons: [
+        {
+          text: 'Reject',
+          handler: () => {
+           
+     
+          }
+        },
+        {
+          text: 'Accept',
+          handler: () => {
+
+            this.service.approve(this.user.id , event.id).subscribe( d => console.log(d)) ;
+
+            event.status = 1 ; 
+            this.upcoming.push(event) ; 
+            this.ev.pushEvent(event)
+            console.log(this.upcoming);
+          }
+        }
+      ]
+    });
+    confirm.present();
+  }
 
 
 }

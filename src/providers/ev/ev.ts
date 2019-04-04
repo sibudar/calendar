@@ -1,6 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { Events } from 'ionic-angular';
+import { CalendarEvent } from 'calendar-utils';
 
 /*
   Generated class for the EvProvider provider.
@@ -10,7 +11,8 @@ import { Events } from 'ionic-angular';
 */
 @Injectable()
 export class EvProvider {
-  ev: any;
+  ev: CalendarEvent[] = [];
+  user: any ;
 
   constructor(public events:Events) {
     console.log('Hello EvProvider Provider');
@@ -23,6 +25,20 @@ export class EvProvider {
 
   getEv(){
     return this.ev ;
+  }
+
+  setUser(user) {
+    this.events.publish('user' , user) ;
+    this.user = user
+  }
+
+
+  getUser() {
+    return this.user ;
+  }
+  pushEvent(event){
+    this.ev.push(event) ;
+    this.events.publish("events" , this.ev);
   }
 
 }

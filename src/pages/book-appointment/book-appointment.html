@@ -5,11 +5,69 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-  <ion-navbar>
-    <ion-title>bookAppointment</ion-title>
+  <ion-navbar color="primary">
+    <ion-title>New Appointment</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
 
+
+
+  <ion-list>
+
+
+    <ion-item>
+      <ion-label floating>Title</ion-label>
+      <ion-input type="text" [(ngModel)] = "title"></ion-input>
+    </ion-item>
+
+
+    <ion-item>
+      <ion-label floating>Vanue</ion-label>
+      <ion-input type="text" [(ngModel)] = "vanue"></ion-input>
+    </ion-item>
+
+
+
+    <ion-item>
+      <ion-label floating>Description</ion-label>
+      <ion-input type="text" [(ngModel)] = "desc"></ion-input>
+    </ion-item>
+
+
+    <ion-item>
+      <ion-label>Start Date</ion-label>
+      <ion-datetime display-format="MMM DD, YYYY" [(ngModel)]="startDate"></ion-datetime>
+    </ion-item>
+
+
+    <ion-item>
+      <ion-label>Start Time</ion-label>
+      <ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="startTime">Start Time</ion-datetime>
+    </ion-item>
+
+
+    <ion-item>
+      <ion-label>End Date</ion-label>
+      <ion-datetime display-format="MMM DD, YYYY" [(ngModel)]="endDate"></ion-datetime>
+    </ion-item>
+
+
+    <ion-item>
+      <ion-label>End Time</ion-label>
+      <ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="endTime">End Time</ion-datetime>
+    </ion-item>
+
+
+
+
+
+  </ion-list>
+
+
+  <button ion-button icon-left (click)="addEvent()">
+    <ion-icon name=""></ion-icon>
+    Add event
+  </button>
 </ion-content>

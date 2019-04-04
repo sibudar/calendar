@@ -1,3 +1,4 @@
+import { LoginPage } from './../pages/login/login';
 import { BookAppointmentPage } from './../pages/book-appointment/book-appointment';
 import { LandingPage } from './../pages/landing/landing';
 import  localeDe  from '@angular/common/locales/zu';
@@ -6,6 +7,7 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
+import { DatePipe } from '@angular/common'
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -17,6 +19,10 @@ import {  CalendarWeekHoursViewModule } from 'angular-calendar-week-hours-view' 
 import {registerLocaleData} from '@angular/common'; 
 import { DayViewPage } from '../pages/day-view/day-view';
 import { EvProvider } from '../providers/ev/ev';
+
+import { HttpClientModule} from '@angular/common/http';
+import { ServiceProvider } from '../providers/service/service';
+
 registerLocaleData(localeDe);
 
 @NgModule({
@@ -25,14 +31,16 @@ registerLocaleData(localeDe);
     HomePage,
     DayViewPage,
     LandingPage,
-    BookAppointmentPage
+    BookAppointmentPage,
+    LoginPage
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     IonicModule.forRoot(MyApp),
     CalendarModule.forRoot(),
-    CalendarWeekHoursViewModule
+    CalendarWeekHoursViewModule,
+    HttpClientModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -40,7 +48,8 @@ registerLocaleData(localeDe);
     HomePage,
     DayViewPage,
     LandingPage,
-    BookAppointmentPage
+    BookAppointmentPage,
+    LoginPage
   ],
   providers: [
     StatusBar,
@@ -55,6 +64,8 @@ registerLocaleData(localeDe);
       useClass: CustomEventTitleFormatterProvider
     },
     EvProvider,
+    DatePipe,
+    ServiceProvider
 
   ]
 })

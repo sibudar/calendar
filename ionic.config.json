@@ -2,5 +2,12 @@
   "name": "Calendar",
   "integrations": {},
   "type": "ionic-angular",
-  "pro_id": "88a9dd65"
+  "pro_id": "88a9dd65",
+  "proxies": [
+    {
+      "path":"/",
+      "proxyUrl": "localhost:9001"
+    }
+  ]
 }
+

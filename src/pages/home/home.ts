@@ -1,3 +1,4 @@
+import { EvProvider } from './../../providers/ev/ev';
 import { AlertController } from 'ionic-angular/components/alert/alert-controller';
 import { Subject } from 'rxjs/Subject';
 import { Component } from '@angular/core';
@@ -37,11 +38,12 @@ export class HomePage {
   events: CalendarEvent[] = [] ;
   
 
-  constructor(private e: Events ,public navParams: NavParams ,public navCtrl: NavController , private alrtCtrl: AlertController ) {
+  constructor(private e: Events , public ev: EvProvider ,public navParams: NavParams ,public navCtrl: NavController , private alrtCtrl: AlertController ) {
       this.events = this.navParams.get("events");
-      this.e.subscribe('event' , (data) => {
-        console.log(data)
+      e.subscribe('events', (d)=>{
+        console.log(d)
       })
+      
   }
 
   handleEvent(event: CalendarEvent): void {
@@ -95,6 +97,12 @@ export class HomePage {
     this.navCtrl.push(DayViewPage, {day: event.date , event: this.events})
    
 
+  }
+
+  ionViewWillEnter() {
+    this.events = (this.ev.getEv()) ;
+    console.log(this.events) ; 
+    this.refresh.next() ;
   }
 
 
